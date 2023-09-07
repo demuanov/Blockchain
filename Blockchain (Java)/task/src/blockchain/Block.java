@@ -16,7 +16,11 @@ public class Block {
     }
 
     public String toString() {
-        return "Block: " + "\nId: " + id + "\nTimestamp: " + timeStamp + "\nHash " + previousBlockHash + "\nHash: " + nextBlockHash;
+        return "Block: " +
+                "\nId: " + id +
+                "\nTimestamp: " + timeStamp +
+                "\nHash of the previous block:  " + previousBlockHash +
+                "\nHash of the block: " + nextBlockHash + "\n";
     }
 
 
