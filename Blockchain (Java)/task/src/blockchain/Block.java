@@ -23,8 +23,8 @@ public class Block {
         return "Block: " +
                 "\nId: " + id +
                 "\nTimestamp: " + timeStamp +
-                "\nHash of the previous block:  " + previousBlockHash +
-                "\nHash of the block: " + blockHash + "\n";
+                "\nHash of the previous block: \n"+ previousBlockHash +
+                "\nHash of the block: \n" + blockHash + "\n";
     }
 
 
