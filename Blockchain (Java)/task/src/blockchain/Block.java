@@ -3,16 +3,20 @@ package blockchain;
 import java.util.Date;
 
 public class Block {
-    private int id;
-    private long timeStamp;
-    private String previousBlockHash;
-    private String nextBlockHash;
+    private final int id;
+    private final long timeStamp;
+    private final String previousBlockHash;
+    private final String blockHash;
 
-    public Block() {
-        this.id = 0;
+    public Block(int id, String previousBlockHash) {
+        this.id = id;
         this.timeStamp = new Date().getTime();
-        this.previousBlockHash = "0";
-        this.nextBlockHash = StringUtil.applySha256(previousBlockHash);
+        this.previousBlockHash = previousBlockHash;
+        this.blockHash = StringUtil.applySha256(String.valueOf(id));
+    }
+
+    public String getBlockHash() {
+        return blockHash;
     }
 
     public String toString() {
@@ -20,7 +24,7 @@ public class Block {
                 "\nId: " + id +
                 "\nTimestamp: " + timeStamp +
                 "\nHash of the previous block:  " + previousBlockHash +
-                "\nHash of the block: " + nextBlockHash + "\n";
+                "\nHash of the block: " + blockHash + "\n";
     }
 
 
