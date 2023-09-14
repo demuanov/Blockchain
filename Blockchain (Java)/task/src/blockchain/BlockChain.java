@@ -6,14 +6,18 @@ public class BlockChain {
     private Block chainBlock;
     private int blockCount = 0;
     public HashMap<Integer, Block> chain;
+    private final int numberOfZeros;
 
 
-    public BlockChain() {
+    public BlockChain(int numberOfZeros) {
         this.chain = new HashMap<>();
+        this.numberOfZeros = numberOfZeros;
     }
 
     public void addBlock() {
-        this.chain.put(blockCount, new Block(blockCount, getLastBlockHash()));
+        this.chain.put(
+            blockCount,
+            new Block(blockCount, getLastBlockHash(), numberOfZeros));
         this.blockCount++;
     }
 
@@ -24,7 +28,7 @@ public class BlockChain {
                 .orElse(null);
 
             return lastBlock != null ? lastBlock.getValue().getBlockHash() : "0";
-    } catch (NoSuchElementException e) {
+            } catch (NoSuchElementException e) {
             return "0";
         }
 
