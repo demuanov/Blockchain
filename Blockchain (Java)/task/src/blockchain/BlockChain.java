@@ -3,21 +3,43 @@ package blockchain;
 import java.util.*;
 
 public class BlockChain {
-    private Block chainBlock;
+    private String threadName;
     private int blockCount = 0;
     public HashMap<Integer, Block> chain;
-    private final int numberOfZeros;
 
+    public int getNumberOfZeros () {
+        return numberOfZeros;
+    }
+
+    public void setNumberOfZeros (int numberOfZeros) {
+        this.numberOfZeros = numberOfZeros;
+    }
+
+    private  int numberOfZeros;
+
+
+    public void setThreadName (String threadName) {
+        this.threadName = threadName;
+    }
 
     public BlockChain(int numberOfZeros) {
         this.chain = new HashMap<>();
         this.numberOfZeros = numberOfZeros;
     }
 
-    public void addBlock() {
+    public synchronized void addBlock() {
+
+        Block block = new Block(blockCount, getLastBlockHash(), numberOfZeros, threadName);
+        System.out.println("Number of Zeros-> " + getNumberOfZeros());
+        if(block.getBlockGenerationTime() < 60) {
+            numberOfZeros++;
+        } else {
+            numberOfZeros--;
+        }
+
         this.chain.put(
             blockCount,
-            new Block(blockCount, getLastBlockHash(), numberOfZeros));
+            block);
         this.blockCount++;
     }
 
