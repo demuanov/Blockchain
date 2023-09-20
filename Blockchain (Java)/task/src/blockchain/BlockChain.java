@@ -1,6 +1,9 @@
 package blockchain;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BlockChain {
     private Block chainBlock;
@@ -12,18 +15,39 @@ public class BlockChain {
     public BlockChain(int numberOfZeros) {
         this.chain = new HashMap<>();
         this.numberOfZeros = numberOfZeros;
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+
+        for (int i = 0; i < 5; i++) {
+
+            List<Miner> minerList = new ArrayList<>();
+            minerList.add(new Miner(getLastBlockHash()));
+
+            try {
+                Block block = executor.invokeAny(minerList);
+                addBlock(block);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void addBlock() {
+
+    public Block createBlock(String previousBlockHash) {
+        return new Block(previousBlockHash);
+    }
+
+    public void addBlock(Block block) {
         this.chain.put(
             blockCount,
-            new Block(blockCount, getLastBlockHash(), numberOfZeros));
+            block
+        );
         this.blockCount++;
     }
 
     public String getLastBlockHash () {
         try {
-        Map.Entry<Integer, Block> lastBlock = this.chain.entrySet().stream()
+            Map.Entry<Integer, Block> lastBlock = this.chain.entrySet().stream()
                 .reduce((first, second) -> second)
                 .orElse(null);
 
@@ -32,6 +56,30 @@ public class BlockChain {
             return "0";
         }
 
+
+    }
+
+    public int getBlockChainSize(){
+        return chain.size();
+    }
+
+    public boolean isValid(BlockChain chain) {
+        if (chain.getBlockChainSize() <= 1) {
+            return chain.getBlockChainSize() < 1 || "0".equals(getLastBlockHash());
+        }
+
+        for (Block block: this.chain.values()) {
+            String blockHash = block.getBlockHash();
+            if( blockHash.equals("0")) {
+                continue;
+            }
+           String previousHash = block.getPreviousBlockHash();
+            boolean valid = previousHash.equals(blockHash);
+            if (!valid) {
+                return false;
+            }
+        }
+        return true;
 
     }
 

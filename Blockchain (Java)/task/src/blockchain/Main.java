@@ -1,20 +1,22 @@
 package blockchain;
 
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {
-      System.out.print("Enter how many zeros the hash must start with: ");
-      Scanner sc = new Scanner(System.in);
+//      int nThreads = Runtime.getRuntime().availableProcessors();
+//      ExecutorService executor = Executors.newFixedThreadPool(nThreads);
+//
+//      MessageSender[] messageSenders = new MessageSender[4];
 
-      int numberOfZeros = sc.nextInt();
-      BlockChain  blockChain = new BlockChain(numberOfZeros);
+try {
 
-       blockChain.addBlock();
-       blockChain.addBlock();
-       blockChain.addBlock();
-       blockChain.addBlock();
-       blockChain.addBlock();
-       blockChain.getAllBlocks();
+  BlockChain blockChain = new BlockChain(2);
+  blockChain.getAllBlocks();
+} catch ( RuntimeException e){
+  e.printStackTrace();
+}
     }
 }

@@ -1,35 +1,73 @@
 package blockchain;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Block {
-    private final int id;
+    private int id;
     private final long timeStamp;
     private final String previousBlockHash;
     private final String blockHash;
-    private float blockGenerationTime;
+    private String event;
+    private int blockGenerationTime;
     private String magicNumber;
+    private String threadName;
+    private int numberOfZeros = 2;
+    static int idCounter = 0;
 
-    public Block (int id, String previousBlockHash, int numberOfZeros) {
-        this.id = id;
+
+    public String getEvent () {
+        return event;
+    }
+
+    public void setEvent (String event) {
+        this.event = event;
+    }
+
+    public float getBlockGenerationTime () {
+        return blockGenerationTime;
+    }
+
+    public void setBlockGenerationTime (int blockGenerationTime) {
+        this.blockGenerationTime = blockGenerationTime;
+    }
+
+    public void setThreadName (String threadName) {
+        this.threadName = threadName;
+    }
+
+
+    public Block (String previousBlockHash) {
+        this.id = idCounter;
         this.timeStamp = new Date().getTime();
         this.previousBlockHash = previousBlockHash;
         this.blockHash = setHash(numberOfZeros);
+    }
+
+    public int getId () {
+        return id;
     }
 
     public String getBlockHash() {
         return blockHash;
     }
 
+    public String getPreviousBlockHash() {
+        return previousBlockHash;
+    }
+
+    @Override
     public String toString() {
         return "Block: " +
-                "\nId: " + id +
+                "\nCreated by miner # " + threadName +
+                "\nId: " + getId() +
                 "\nTimestamp: " + timeStamp +
                 "\nMagic number: " + magicNumber +
                 "\nHash of the previous block: \n"+ previousBlockHash +
                 "\nHash of the block: \n" + blockHash +
-                "\nBlock was generating for " + blockGenerationTime + " seconds" + "\n";
+                "\nBlock was generating for " + blockGenerationTime + " seconds" +
+                "\nN was "+ getEvent() +" to " + numberOfZeros  + "\n";
     }
 
     private String setHash(int numberOfZeros){
@@ -47,9 +85,12 @@ public class Block {
 
        Long endTime = System.currentTimeMillis();
 
-        this.blockGenerationTime = (endTime - startTime) / 1000F;
-        System.out.println("BLOCK GENERATION TIME ->" + blockGenerationTime);
+        setBlockGenerationTime((int)((endTime - startTime) / 1000F));
+//        System.out.println("BLOCK GENERATION TIME ->" + blockGenerationTime);
        return hash;
     }
 
+    public void increaseId () {
+        this.idCounter++;
+    }
 }
