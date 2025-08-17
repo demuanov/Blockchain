@@ -8,14 +8,25 @@ public class Block {
     private final long timeStamp;
     private final String previousBlockHash;
     private final String blockHash;
-    private float blockGenerationTime;
-    private String magicNumber;
 
-    public Block (int id, String previousBlockHash, int numberOfZeros) {
+    public float getBlockGenerationTime () {
+        return blockGenerationTime;
+    }
+
+    public void setBlockGenerationTime (int blockGenerationTime) {
+        this.blockGenerationTime = blockGenerationTime;
+    }
+
+    private int blockGenerationTime;
+    private String magicNumber;
+    private String threadName;
+
+    public Block (int id, String previousBlockHash, int numberOfZeros,String threadName) {
         this.id = id;
         this.timeStamp = new Date().getTime();
         this.previousBlockHash = previousBlockHash;
         this.blockHash = setHash(numberOfZeros);
+        this.threadName = threadName;
     }
 
     public String getBlockHash() {
@@ -24,12 +35,14 @@ public class Block {
 
     public String toString() {
         return "Block: " +
+                "\nCreated by miner # " + threadName +
                 "\nId: " + id +
                 "\nTimestamp: " + timeStamp +
                 "\nMagic number: " + magicNumber +
                 "\nHash of the previous block: \n"+ previousBlockHash +
                 "\nHash of the block: \n" + blockHash +
-                "\nBlock was generating for " + blockGenerationTime + " seconds" + "\n";
+                "\nBlock was generating for " + blockGenerationTime + " seconds" +
+                "\nN was decreased by "  + "\n";
     }
 
     private String setHash(int numberOfZeros){
@@ -47,7 +60,7 @@ public class Block {
 
        Long endTime = System.currentTimeMillis();
 
-        this.blockGenerationTime = (endTime - startTime) / 1000F;
+        setBlockGenerationTime((int)((endTime - startTime) / 1000F));
         System.out.println("BLOCK GENERATION TIME ->" + blockGenerationTime);
        return hash;
     }

@@ -1,20 +1,30 @@
 package blockchain;
 
-import java.util.Scanner;
+import blockchain.BlockChainRunnable.*;
+import java.util.concurrent.ThreadPoolExecutor;
+
 
 public class Main {
-    public static void main(String[] args) {
-      System.out.print("Enter how many zeros the hash must start with: ");
-      Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws InterruptedException {
+    Controller controller = new Controller();
 
-      int numberOfZeros = sc.nextInt();
-      BlockChain  blockChain = new BlockChain(numberOfZeros);
+    BlockChain blockChain = new BlockChain(2);
 
-       blockChain.addBlock();
-       blockChain.addBlock();
-       blockChain.addBlock();
-       blockChain.addBlock();
-       blockChain.addBlock();
-       blockChain.getAllBlocks();
+    Miner miner = new Miner(new BlockChainRunnable(controller, blockChain), "1");
+    Miner miner2 = new Miner(new BlockChainRunnable(controller, blockChain), "2");
+
+    Thread thread1 = new Thread(miner, "1");
+    Thread thread2 = new Thread(miner2, "2");
+    Thread thread3 = new Thread(miner, "3");
+
+    thread1.start();
+    thread2.start();
+    thread3.start();
+
+    thread1.join();
+    thread2.join();
+
+    blockChain.getAllBlocks();
+
     }
 }
